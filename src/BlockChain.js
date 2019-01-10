@@ -1,25 +1,24 @@
 const sha256 = require('sha256');
 
-class BlockChain {
+class Transaction{
 
-    constructor() {
-        this.chain = [];
-        this.pendingTransactions = [];
-        this.networkNodes = [];
-        this.createNewBlock(100,'0','0');
+    constructor(sender,recipient,amount){
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
     }
 
-    createNewTransaction(amount, sender, recipient) {
-
-        const newTransaction = {
-            amount: amount,
-            sender: sender,
-            recipient: recipient,
-            // transactionId: uuid().split('-').join('')
-        };
+}
 
 
-        return newTransaction;
+class BlockChain {
+
+    constructor(currentNodeUrl) {
+        this.chain = [];
+        this.pendingTransactions = [];
+        this.currentNodeUrl = currentNodeUrl;
+        this.networkNodes = [];
+        this.createNewBlock(100,'0','0');
     }
 
     addTransactionToPendingTransactions(transactionObj) {
@@ -70,4 +69,5 @@ class BlockChain {
 
 }
 
-module.exports = BlockChain;
+module.exports.BlockChain = BlockChain;
+module.exports.Transaction = Transaction;
