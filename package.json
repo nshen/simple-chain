@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/network-node.js 3000",
-    "node_1": "nodemon src/network-node.js 3001",
-    "node_2": "nodemon src/network-node.js 3002",
-    "node_3": "nodemon src/network-node.js 3003",
-    "node_4": "nodemon src/network-node.js 3004",
-    "node_5": "nodemon src/network-node.js 3005"
+    "node_1": "nodemon src/network-node.js 3001 http://localhost:3001",
+    "node_2": "nodemon src/network-node.js 3002 http://localhost:3002",
+    "node_3": "nodemon src/network-node.js 3003 http://localhost:3003",
+    "node_4": "nodemon src/network-node.js 3004 http://localhost:3004",
+    "node_5": "nodemon src/network-node.js 3005 http://localhost:3005"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "nodemon": "^1.18.9",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "sha256": "^0.2.0"
+    "sha256": "^0.2.0",
+    "uuid": "^3.3.2"
   }
 }

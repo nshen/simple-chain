@@ -7,8 +7,10 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\src\\api.js"
+            "name": "run node_1",
+            "program": "${workspaceFolder}\\src\\network-node.js",
+
+            "args": ["3001","http://localhost:3001"]
         }
     ]
 }

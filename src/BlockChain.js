@@ -1,4 +1,5 @@
 const sha256 = require('sha256');
+const uuid = require('uuid/v1')
 
 class Transaction{
 
@@ -6,6 +7,7 @@ class Transaction{
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
+        this.uuid = uuid().split('-').join('')
     }
 
 }
@@ -14,6 +16,7 @@ class Transaction{
 class BlockChain {
 
     constructor(currentNodeUrl) {
+        this.reward = 12.5;
         this.chain = [];
         this.pendingTransactions = [];
         this.currentNodeUrl = currentNodeUrl;
@@ -23,7 +26,7 @@ class BlockChain {
 
     addTransactionToPendingTransactions(transactionObj) {
         this.pendingTransactions.push(transactionObj);
-        return this.getLastBlock()['index'] + 1;
+        return this.getLastBlock()['index'] + 1; // 最后一个block的下一个
     }
 
     createNewBlock(nonce, previousBlockHash, hash) {
@@ -55,7 +58,8 @@ class BlockChain {
     proofOfWork(previousBlockHash, currentBlockData) {
         let nonce = 0;
         let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
-        while (hash.substring(0, 4) !== '0000') {
+        // while (hash.substring(0, 4) !== '0000') {
+        while (hash.substring(0, 1) !== '0') {
             nonce++;
             hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
             console.log(hash);
