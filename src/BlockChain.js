@@ -1,17 +1,16 @@
 const sha256 = require('sha256');
 const uuid = require('uuid/v1')
 
-class Transaction{
+class Transaction {
 
-    constructor(sender,recipient,amount){
+    constructor(sender, recipient, amount) {
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
-        this.uuid = uuid().split('-').join('')
+        this.id = uuid().split('-').join('')
     }
 
 }
-
 
 class BlockChain {
 
@@ -21,7 +20,7 @@ class BlockChain {
         this.pendingTransactions = [];
         this.currentNodeUrl = currentNodeUrl;
         this.networkNodes = [];
-        this.createNewBlock(100,'0','0');
+        this.createNewBlock(100, '0', '0');
     }
 
     addTransactionToPendingTransactions(transactionObj) {
@@ -58,18 +57,82 @@ class BlockChain {
     proofOfWork(previousBlockHash, currentBlockData) {
         let nonce = 0;
         let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
-        // while (hash.substring(0, 4) !== '0000') {
-        while (hash.substring(0, 1) !== '0') {
+        while (!this.validNonce(hash)) {
             nonce++;
             hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
             console.log(hash);
         }
 
         return nonce;
-
     }
 
+    validNonce(hash) {
+        // return hash.substring(0, 1) === '0';
+        return hash.substring(0, 4) === '0000';
+    }
 
+    chainIsValid(blockchain) {
+
+        const genesisBlock = blockchain[0];
+        if (!genesisBlock['nonce'] === 100) return false;
+        if (!genesisBlock['previousBlockHash'] === '0') return false;
+        if (!genesisBlock['hash'] === '0') return false;
+        if (!genesisBlock['transactions'].length === 0) return false;
+
+
+        for (let i = 1; i < blockchain.length; i++) {
+            const currentBlock = blockchain[i];
+            const previousBlock = blockchain[i - 1];
+            if (currentBlock['previousBlockHash'] !== previousBlock['hash']) return false;
+            // hash data need index ?
+            const blockHash = this.hashBlock(previousBlock['hash'], { transactions: currentBlock['transactions'], index: currentBlock['index'] }, currentBlock['nonce']);
+            if (!this.validNonce(blockHash)) return false;
+            console.log('previousBlockHash =>', previousBlock['hash']);
+            console.log('currentBlockHash =>', currentBlock['hash']);
+        }
+        return true;
+    }
+
+    getBlock(blockHash) {
+        for (const block of this.chain) {
+            if (block.hash === blockHash)
+                return block;
+        }
+        return null;
+    }
+
+    // 不会搜索pendding transactions
+    getTransaction(transactionId) {
+        for (const block of this.chain) {
+            for (const trans of block.transactions) {
+                if (trans.id === transactionId)
+                    return { trans, block };
+            }
+        }
+    }
+
+    getAddressData(address) {
+        let addressTransactions = [];
+        this.chain.forEach(block => {
+            block.transactions.forEach(trans => {
+                if (trans.sender === address || trans.recipient === address) {
+                    addressTransactions.push(trans);
+                }
+            })
+        })
+
+        let balance = 0;
+        addressTransactions.forEach(transaction => {
+            if (transaction.recipient === address) balance += transaction.amount;
+            else if (transaction.sender === address) balance -= transaction.amount;
+        });
+
+        return {
+            addressTransactions: addressTransactions,
+            addressBalance: balance
+        };
+
+    }
 
 }
 
