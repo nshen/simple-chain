@@ -33,10 +33,12 @@ class BlockChain {
         const newBlock = {
             index: this.chain.length + 1,
             timestamp: Date.now(),
-            transactions: this.pendingTransactions,
             nonce: nonce,
             hash: hash,
-            previousBlockHash: previousBlockHash
+            previousBlockHash: previousBlockHash,
+            // merkle root
+            //-----body
+            transactions: this.pendingTransactions
         }
 
         this.pendingTransactions = [];

@@ -1,0 +1,1 @@
+based on the book [Learn Blockchain Programming with JavaScript](https://www.packtpub.com/web-development/learn-blockchain-programming-javascript)
